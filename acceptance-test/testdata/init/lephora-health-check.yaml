@@ -1,0 +1,9 @@
+stages:
+  - type: api
+    name: health_check
+    request:
+      url: /health
+      method: GET
+    assert:
+      status: 200
+      body: 'healthy'

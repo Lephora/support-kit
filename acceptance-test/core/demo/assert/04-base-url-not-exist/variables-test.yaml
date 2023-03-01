@@ -1,0 +1,15 @@
+stages:
+- type: api
+  name: say hello
+  request:
+    url: /hello
+    method: GET
+    headers:
+      content-type: application/json
+  actual:
+    error_message: 'Get "http://127.0.0.1:8883/hello": dial tcp 127.0.0.1:8883: connect:
+      connection refused'
+  assert:
+    status: 201
+vars:
+  base_url: http://127.0.0.1:8883

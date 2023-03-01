@@ -1,0 +1,18 @@
+###
+
+GET http://127.0.0.1:8884/hello
+
+###
+
+GET http://127.0.0.1:8884/callback
+
+###
+
+GET http://127.0.0.1:8884/callback/again
+callback: true
+pre_check: 200
+
+###
+
+GET http://127.0.0.1:8884/record-me
+

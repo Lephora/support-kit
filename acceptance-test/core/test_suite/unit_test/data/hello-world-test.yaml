@@ -1,0 +1,25 @@
+stages:
+  - type: api
+    name: say hello
+    request:
+      url: http://127.0.0.1:8884/hello
+      method: GET
+      headers:
+        content-type: application/json
+      body: '{"sequence": "hello world"}'
+
+  - type: api
+    name: say hello twice
+    request:
+      url: http://127.0.0.1:8884/hello
+      method: GET
+      headers:
+        content-type: application/json
+
+  - type:
+    name: say hello twice
+    request:
+      url: http://127.0.0.1:8884/hello
+      method: GET
+      headers:
+        content-type: application/json

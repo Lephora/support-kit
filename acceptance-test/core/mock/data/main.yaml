@@ -1,0 +1,51 @@
+- request:
+    url: ^/hello$
+    method: GET
+  response:
+    status: 201
+    headers:
+      hello: yes
+    body: succeed
+
+- request:
+    url: ^/callback$
+    method: GET
+  response:
+    status: 200
+    headers:
+      callback: true
+    body: callback
+
+- request:
+    url: ^/callback/again$
+    headers:
+      callback: true
+      pre_check: 200
+    method: GET
+  response:
+    status: 200
+    body: succeed
+
+- request:
+    url: ^/record-me$
+    method: GET
+  response:
+    status: 201
+    headers:
+      record: true
+      content-type: application/json
+    body: '{"record":true}'
+
+- request:
+    url: ^/post$
+    method: POST
+    headers:
+      Content-Type: application/json
+    post: >
+      {"name": "api"}
+  response:
+    headers:
+      post: true
+      Content-Type: application/json
+    status: 201
+    body: Your post request was successfully processed!

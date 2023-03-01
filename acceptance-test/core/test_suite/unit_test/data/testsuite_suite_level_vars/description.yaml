@@ -1,0 +1,5 @@
+import:
+  - variables-test
+
+vars:
+  url: http://127.0.0.1:8884/hello

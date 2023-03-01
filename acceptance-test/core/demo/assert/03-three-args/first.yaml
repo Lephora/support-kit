@@ -1,0 +1,29 @@
+stages:
+  - type: api
+    name: first
+    # 被测API信息
+    request:
+      url: http://127.0.0.1:8884/hello
+      method: GET
+      params:
+        testcase_name: hello-world-test
+      headers:
+        content-type: application/json
+    # 录制阶段获得API的真实返回信息，重复录制会覆盖/更新该信息
+    response:
+      status: 201
+      headers:
+        content-type: application/json
+      body: '{"sequence": "hello world"}'
+    # 编写测试断言，断言内容和response内容一一对应 response.status -> assertion.status
+    assertion:
+      status: 201
+      headers:
+        content-type: /[a-zA-Z]+/
+      body:
+        equals: '{"sequence": "hello world"}'
+        ignore_fields:
+          - $.sequence
+        check_fields:
+          - key: $.sequence
+            value: "hello world"

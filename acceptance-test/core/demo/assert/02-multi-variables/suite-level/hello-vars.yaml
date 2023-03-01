@@ -1,0 +1,8 @@
+stages:
+  - type: api
+    name: first_call
+    request:
+      url: '{{ .url }}'
+      method: GET
+    assert:
+      status: 201

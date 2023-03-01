@@ -1,0 +1,6 @@
+import:
+  - hello-vars
+
+vars:
+  url: "panic"
+

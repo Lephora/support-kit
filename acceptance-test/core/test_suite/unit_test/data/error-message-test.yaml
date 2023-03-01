@@ -1,0 +1,27 @@
+vars:
+  url: http://127.0.0.1:8884/hello
+
+stages:
+  - type: api
+    name: failed_assert
+    request:
+      url: '{{ .url }}'
+      method: GET
+    assert:
+      status: 200
+
+  - type: api
+    name: error_call
+    request:
+      url: 'error_path'
+      method: GET
+    assert:
+      status: 200
+
+  - type: api
+    name: success_assert
+    request:
+      url: '{{ .url }}'
+      method: GET
+    assert:
+      status: 201

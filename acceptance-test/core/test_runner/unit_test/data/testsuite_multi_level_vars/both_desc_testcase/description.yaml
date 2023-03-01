@@ -1,0 +1,5 @@
+import:
+  - hello-world-test
+
+vars:
+  url: "panic"
