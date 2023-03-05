@@ -1,0 +1,15 @@
+stages:
+  - type: api
+    name: query-success
+    request:
+      url: /commodity/000001
+      method: GET
+    assert:
+      status: 200
+      json_path:
+        - path: title
+          regex: lephora
+        - path: description
+          regex: ^[0-9a-zA-Z\s]+$
+        - path: images
+          regex: "5"

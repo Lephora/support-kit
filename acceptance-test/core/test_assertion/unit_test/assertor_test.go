@@ -54,4 +54,10 @@ func (s *AssertorSuite) TestJsonAssertor(c *C) {
 	// then
 	c.Check(err, IsNil)
 	c.Check(assert, Equals, true)
+
+	// when
+	assert, err = assertor.Object(object).Assert("friends.#", test_assertion.Equals, "3")
+	// then
+	c.Check(err, IsNil)
+	c.Check(assert, Equals, true)
 }

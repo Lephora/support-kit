@@ -30,10 +30,16 @@ type Actual struct {
 }
 
 type Assertion struct {
-	Status  int               `yaml:"status,omitempty" json:"status,omitempty"`
-	Headers map[string]string `yaml:"headers,omitempty" json:"headers,omitempty"`
-	Body    string            `yaml:"body,omitempty" json:"body,omitempty"`
-	Actual  *Actual           `yaml:"actual,omitempty" json:"actual,omitempty"`
+	Status   int               `yaml:"status,omitempty" json:"status,omitempty"`
+	Headers  map[string]string `yaml:"headers,omitempty" json:"headers,omitempty"`
+	Body     string            `yaml:"body,omitempty" json:"body,omitempty"`
+	JsonPath JsonPathValidator `yaml:"json_path,omitempty" json:"json_path,omitempty"`
+	Actual   *Actual           `yaml:"actual,omitempty" json:"actual,omitempty"`
+}
+
+type JsonPathValidator []struct {
+	Path  string `json:"path,omitempty" yaml:"path,omitempty"`
+	Regex string `json:"regex,omitempty" yaml:"regex,omitempty"`
 }
 
 func (a *Actual) Success(status int, headers map[string]string, body *string) *Actual {
@@ -91,13 +97,40 @@ func (s *Stage) executeApi() error {
 	s.Actual.Success(resp.StatusCode, transferHeaders(resp.Header), transferBody(resp.Body))
 
 	if common.CurrentPhase() == common.Asserting && s.Assertion != nil {
-		assertor := test_assertion.GenericAssertor{}
-		assert, err := assertor.Assert(statusCode, test_assertion.Equals, s.Assertion.Status)
-		if err != nil || !assert {
-			s.report(assert, err.Error())
-		} else {
-			s.Assertion.Actual = s.Actual
-			s.report(assert, map[string]any{"request": s.getRenderRequest(), "assertion": s.Assertion})
+		if s.Assertion.Status != 0 {
+			assertor := test_assertion.GenericAssertor{}
+			assert, err := assertor.Assert(statusCode, test_assertion.Equals, s.Assertion.Status)
+			if err != nil || !assert {
+				s.report(assert, err.Error())
+			} else {
+				s.Assertion.Actual = s.Actual
+				s.report(assert, map[string]any{"request": s.getRenderRequest(), "assertion": s.Assertion})
+			}
+		}
+
+		if s.Assertion.Body != "" {
+			assertor := test_assertion.GenericAssertor{}
+			assert, err := assertor.Assert(*s.Actual.Body, test_assertion.Equals, s.Assertion.Body)
+			if err != nil || !assert {
+				s.report(assert, err.Error())
+			} else {
+				s.Assertion.Actual = s.Actual
+				s.report(assert, map[string]any{"request": s.getRenderRequest(), "assertion": s.Assertion})
+			}
+		}
+
+		if s.Assertion.JsonPath != nil {
+			for _, jsonPath := range s.Assertion.JsonPath {
+				assertor := test_assertion.JsonAssertor{}
+				assertor.Object(*s.Actual.Body)
+				assert, err := assertor.Assert(jsonPath.Path, test_assertion.Match, jsonPath.Regex)
+				if err != nil {
+					s.report(assert, err.Error())
+				} else {
+					s.Assertion.Actual = s.Actual
+					s.report(assert, map[string]any{"request": s.getRenderRequest(), "assertion": s.Assertion})
+				}
+			}
 		}
 	}
 	return nil
