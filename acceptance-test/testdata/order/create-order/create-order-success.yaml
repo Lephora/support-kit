@@ -1,0 +1,17 @@
+stages:
+  - type: api
+    name: create-order-success
+    request:
+      url: /order
+      method: POST
+      headers:
+        content-type: application/json
+        token: 12345678
+      body: '{"customerId": "000002","commoditySku": "000006","quantity": 11,"address": "Shanghai Thoughtworks","fullName": "Bob, Liu","phoneNumber": "13411011010"}'
+    assert:
+      status: 201
+      json_path:
+        - path: orderId
+          regex: ^[0-9]{12}$
+        - path: orderStatus
+          regex: "WAITING_FOR_PAY"

@@ -1,0 +1,15 @@
+stages:
+  - type: api
+    name: query-not-exist-sku
+    request:
+      url: /commodity/999999
+      method: GET
+    assert:
+      status: 400
+  - type: api
+    name: query-illegal-sku
+    request:
+      url: /commodity/1234567
+      method: GET
+    assert:
+      status: 400

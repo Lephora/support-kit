@@ -1,0 +1,45 @@
+stages:
+  - type: api
+    name: error-customer-id
+    request:
+      url: /order
+      method: POST
+      headers:
+        content-type: application/json
+        token: 12345671
+      body: '{"customerId": "X00002","commoditySku": "000006","quantity": 11,"address": "Shanghai Thoughtworks","fullName": "Bob, Liu","phoneNumber": "13411011010"}'
+    assert:
+      status: 400
+  - type: api
+    name: error-commodity-sku
+    request:
+      url: /order
+      method: POST
+      headers:
+        content-type: application/json
+        token: 12345672
+      body: '{"customerId": "000002","commoditySku": "X00006","quantity": 11,"address": "Shanghai Thoughtworks","fullName": "Bob, Liu","phoneNumber": "13411011010"}'
+    assert:
+      status: 400
+  - type: api
+    name: not-found-customer-id
+    request:
+      url: /order
+      method: POST
+      headers:
+        content-type: application/json
+        token: 12345673
+      body: '{"customerId": "100002","commoditySku": "000006","quantity": 11,"address": "Shanghai Thoughtworks","fullName": "Bob, Liu","phoneNumber": "13411011010"}'
+    assert:
+      status: 400
+  - type: api
+    name: not-found-commodity-sku
+    request:
+      url: /order
+      method: POST
+      headers:
+        content-type: application/json
+        token: 12345674
+      body: '{"customerId": "000002","commoditySku": "100006","quantity": 11,"address": "Shanghai Thoughtworks","fullName": "Bob, Liu","phoneNumber": "13411011010"}'
+    assert:
+      status: 400

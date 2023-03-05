@@ -1,2 +1,3 @@
 import:
   - query-commodity-by-sku-success
+  - query-commodity-by-sku-failed
